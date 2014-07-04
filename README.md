@@ -1,4 +1,14 @@
-[![Build Status](https://travis-ci.org/mruby/mruby.png?branch=master)](https://travis-ci.org/mruby/mruby)
+[![Build Status](https://travis-ci.org/AE9RB/mruby-complex.png?branch=master)](https://travis-ci.org/AE9RB/mruby-complex)
+
+## What's this fork
+
+mruby-complex adds support for complex numbers as an immediate mrb_value. The main development branch
+of mruby is limited to only having core features specified in the ISO specification. This means the
+implementation of a complex type can only exist as an mrbgem. As an mrbgem, every complex number
+would have to exist as an object which imposes severe performance penalties for most use cases.
+
+This is a complete fork of mruby, not an mrbgem for use with the main project. Implementation
+of the complex type exists as an mrbgem but is unusable without changes to the mruby core.
 
 ## What's mruby
 
