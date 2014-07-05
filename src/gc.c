@@ -605,6 +605,9 @@ obj_free(mrb_state *mrb, struct RBasic *obj)
     return;
 
   case MRB_TT_FLOAT:
+#ifdef MRB_COMPLEX
+  case MRB_TT_COMPLEX:
+#endif
 #ifdef MRB_WORD_BOXING
     break;
 #else

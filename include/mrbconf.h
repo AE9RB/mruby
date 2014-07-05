@@ -20,6 +20,9 @@
 /* represent mrb_value in boxed double; conflict with MRB_USE_FLOAT */
 //#define MRB_NAN_BOXING
 
+/* represent mrb_value as complex number */
+#define MRB_COMPLEX
+
 /* define on big endian machines; used by MRB_NAN_BOXING */
 //#define MRB_ENDIAN_BIG
 

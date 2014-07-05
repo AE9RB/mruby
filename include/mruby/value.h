@@ -104,7 +104,11 @@ static const unsigned int IEEE754_INFINITY_BITS_SINGLE = 0x7F800000;
 typedef uint8_t mrb_bool;
 struct mrb_state;
 
-#if defined(MRB_NAN_BOXING)
+#if defined(MRB_COMPLEX)
+
+#include "mruby/value_complex.h"
+
+#elif defined(MRB_NAN_BOXING)
 
 #ifdef MRB_USE_FLOAT
 # error ---->> MRB_NAN_BOXING and MRB_USE_FLOAT conflict <<----

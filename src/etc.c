@@ -104,6 +104,30 @@ mrb_float_id(mrb_float f)
   return id;
 }
 
+#ifdef MRB_COMPLEX
+static mrb_int
+mrb_complex_id(mrb_float real, mrb_float imag)
+{
+  const char *p = (const char*)&real;
+  int len = sizeof(real);
+  mrb_int id = 0;
+
+  while (len--) {
+    id = id*65599 + *p;
+    p++;
+  }
+  p = (const char*)&imag;
+  len = sizeof(imag);
+  while (len--) {
+    id = id*65599 + *p;
+    p++;
+  }
+  id = id + (id>>5);
+
+  return id;
+}
+#endif
+
 mrb_int
 mrb_obj_id(mrb_value obj)
 {
@@ -128,6 +152,10 @@ mrb_obj_id(mrb_value obj)
     return MakeID2(mrb_float_id((mrb_float)mrb_fixnum(obj)), MRB_TT_FLOAT);
   case  MRB_TT_FLOAT:
     return MakeID(mrb_float_id(mrb_float(obj)));
+#ifdef MRB_COMPLEX
+  case  MRB_TT_COMPLEX:
+    return MakeID(mrb_complex_id(mrb_real(obj), mrb_imag(obj)));
+#endif
   case  MRB_TT_STRING:
   case  MRB_TT_OBJECT:
   case  MRB_TT_CLASS:
