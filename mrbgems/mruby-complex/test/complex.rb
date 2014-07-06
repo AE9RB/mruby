@@ -11,3 +11,14 @@ assert("Complex() varargs") do
   assert_equal 12.34, Complex(12.34, 56.78).real
   assert_equal 56.78, Complex(12.34, 56.78).imag
 end
+
+assert("Complex() equality") do
+  assert_not_equal Complex(0/0, 0/0), Complex(0/0, 0/0)
+  assert_not_equal Complex(12.34, 0), Complex(12.34, 56.78)
+  assert_not_equal Complex(12.34, 56.78), Complex(0, 56.78)
+  assert_equal Complex(12.34, 56.78), Complex(12.34, 56.78)
+  assert_equal 12.34, Complex(12.34)
+  assert_equal 42, Complex(42)
+  assert_equal Complex(12.34), 12.34
+  assert_equal Complex(42), 42
+end

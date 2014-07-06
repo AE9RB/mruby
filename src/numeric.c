@@ -402,6 +402,10 @@ flo_eq(mrb_state *mrb, mrb_value x)
   mrb_get_args(mrb, "o", &y);
 
   switch (mrb_type(y)) {
+#ifdef MRB_COMPLEX
+    case MRB_TT_COMPLEX:
+    return mrb_bool_value(mrb_imag(y) == 0 && mrb_real(y) == mrb_float(x));
+#endif
   case MRB_TT_FIXNUM:
     b = (mrb_float)mrb_fixnum(y);
     break;
@@ -868,6 +872,10 @@ fix_equal(mrb_state *mrb, mrb_value x)
 
   mrb_get_args(mrb, "o", &y);
   switch (mrb_type(y)) {
+#ifdef MRB_COMPLEX
+  case MRB_TT_COMPLEX:
+    return mrb_bool_value(mrb_imag(y) == 0 && mrb_real(y) == (mrb_float)mrb_fixnum(x));
+#endif
   case MRB_TT_FIXNUM:
     return mrb_bool_value(mrb_fixnum(x) == mrb_fixnum(y));
   case MRB_TT_FLOAT:

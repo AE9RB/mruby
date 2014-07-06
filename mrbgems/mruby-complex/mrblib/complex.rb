@@ -3,11 +3,13 @@
 # See Copyright Notice in mruby.h
 
 class Complex
-  
+
   def to_s
-    "(#{real}+#{imag}i)"
+    "#{real}#{(imag >= 0 || imag.nan?) ? "+#{imag}" : imag}#{"*" if !imag.finite?}i"
   end
 
-  alias :inspect :to_s
-  
+  def inspect
+    "(#{to_s})"
+  end
+
 end

@@ -26,6 +26,11 @@ mrb_obj_eq(mrb_state *mrb, mrb_value v1, mrb_value v2)
   case MRB_TT_FLOAT:
     return (mrb_float(v1) == mrb_float(v2));
 
+#ifdef MRB_COMPLEX
+  case MRB_TT_COMPLEX:
+    return (mrb_real(v1) == mrb_real(v2) && mrb_imag(v1) == mrb_imag(v2));
+#endif
+
   default:
     return (mrb_ptr(v1) == mrb_ptr(v2));
   }

@@ -33,6 +33,44 @@ cpx_imag(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, mrb_imag(self));
 }
 
+static mrb_value
+cpx_equal(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_float oreal, oimag;
+
+  mrb_get_args(mrb, "o", &other);
+  switch (mrb_type(other)) {
+  case MRB_TT_COMPLEX:
+    oreal = mrb_real(other);
+    oimag = mrb_imag(other);
+    break;
+  case MRB_TT_FIXNUM:
+    oreal = (mrb_float)mrb_fixnum(other);
+    oimag = 0;
+    break;
+  case MRB_TT_FLOAT:
+    oreal = mrb_float(other);
+    oimag = 0;
+    break;
+  default:
+    return mrb_false_value();
+  }
+  return mrb_bool_value(mrb_imag(self) == oimag && mrb_real(self) == oreal);
+}
+
+static mrb_value
+cpx_eql(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+
+  mrb_get_args(mrb, "o", &other);
+  if (!mrb_complex_p(other)) return mrb_false_value();
+  return mrb_bool_value(mrb_imag(self) == mrb_imag(other) && mrb_real(self) == mrb_real(other));
+}
+
+
+
 /* ------------------------------------------------------------------------*/
 void
 mrb_mruby_complex_gem_init(mrb_state *mrb)
@@ -49,13 +87,15 @@ mrb_mruby_complex_gem_init(mrb_state *mrb)
   mrb_static_assert(sizeof(mrb_value) == 16, "sizeof mrb_value is not 16");
 #endif
   
-  numeric = mrb_class_get(mrb, "Numeric");
   /* Complex() initializer */
   mrb_define_module_function(mrb, mrb->kernel_module, "Complex", cpx_new, MRB_ARGS_OPT(2));
   /* Complex Class */
+  numeric = mrb_class_get(mrb, "Numeric");
   complex = mrb->complex_class = mrb_define_class(mrb, "Complex", numeric);
   mrb_undef_class_method(mrb,  complex, "new");
   mrb_undef_method(mrb,  complex, "<=>");
+  mrb_define_method(mrb, complex, "==", cpx_equal, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, complex, "eql?", cpx_eql, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, complex, "real", cpx_real, MRB_ARGS_NONE());
   mrb_define_method(mrb, complex, "imag", cpx_imag, MRB_ARGS_NONE());
 }
