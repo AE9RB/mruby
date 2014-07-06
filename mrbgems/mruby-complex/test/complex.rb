@@ -22,3 +22,19 @@ assert("Complex() equality") do
   assert_equal Complex(12.34), 12.34
   assert_equal Complex(42), 42
 end
+
+assert("Complex() addition") do
+  assert_equal Complex(8,10), Complex(3,4) + Complex(5,6)
+  assert_equal Complex(3.6,4), Complex(3.1,4) + 0.5
+  assert_equal Complex(8.1,4), Complex(3.1,4) + 5
+  assert_equal Complex(3.6,4), 0.5 + Complex(3.1,4)
+  assert_equal Complex(8.1,4), 5 + Complex(3.1,4)
+end
+
+assert("Complex() subtraction") do
+  assert_equal Complex(1,3), Complex(5,6) - Complex(4,3)
+  assert_equal Complex(2.6,4), Complex(3.1,4) - 0.5
+  assert_equal Complex(-1.9,4), Complex(3.1,4) - 5
+  assert_equal Complex(-2.6,4), 0.5 - Complex(3.1,4)
+  assert_equal Complex(1.9,4), 5 - Complex(3.1,4)
+end

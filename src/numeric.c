@@ -276,6 +276,11 @@ flo_minus(mrb_state *mrb, mrb_value x)
   mrb_value y;
 
   mrb_get_args(mrb, "o", &y);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(y)) {
+    return mrb_complex_value(mrb,  mrb_float(x) - mrb_real(y), mrb_imag(y));
+  }
+#endif
   return mrb_float_value(mrb, mrb_float(x) - mrb_to_flo(mrb, y));
 }
 
@@ -1145,6 +1150,11 @@ fix_plus(mrb_state *mrb, mrb_value self)
   mrb_value other;
 
   mrb_get_args(mrb, "o", &other);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(other)) {
+    return mrb_complex_value(mrb, mrb_real(other) + (mrb_float)mrb_fixnum(self), mrb_imag(other));
+  }
+#endif
   return mrb_fixnum_plus(mrb, self, other);
 }
 
@@ -1182,6 +1192,11 @@ fix_minus(mrb_state *mrb, mrb_value self)
   mrb_value other;
 
   mrb_get_args(mrb, "o", &other);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(other)) {
+    return mrb_complex_value(mrb, (mrb_float)mrb_fixnum(self) - mrb_real(other), mrb_imag(other));
+  }
+#endif
   return mrb_fixnum_minus(mrb, self, other);
 }
 
@@ -1293,6 +1308,11 @@ flo_plus(mrb_state *mrb, mrb_value x)
   mrb_value y;
 
   mrb_get_args(mrb, "o", &y);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(y)) {
+    return mrb_complex_value(mrb, mrb_real(y) + mrb_float(x), mrb_imag(y));
+  }
+#endif
   return mrb_float_value(mrb, mrb_float(x) + mrb_to_flo(mrb, y));
 }
 

@@ -11,6 +11,24 @@
 
 #include "mruby.h"
 
+#define MRB_TO_COMPLEX(mrbvalue, oreal, oimag) \
+switch (mrb_type(mrbvalue)) { \
+case MRB_TT_COMPLEX: \
+  oreal = mrb_real(mrbvalue); \
+  oimag = mrb_imag(mrbvalue); \
+  break; \
+case MRB_TT_FIXNUM: \
+  oreal = (mrb_float)mrb_fixnum(mrbvalue); \
+  oimag = 0; \
+  break; \
+case MRB_TT_FLOAT: \
+  oreal = mrb_float(mrbvalue); \
+  oimag = 0; \
+  break; \
+default: \
+  mrb_raise(mrb, E_TYPE_ERROR, "non complex value"); \
+}
+
 static mrb_value
 cpx_new(mrb_state *mrb, mrb_value self)
 {
@@ -69,7 +87,27 @@ cpx_eql(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(mrb_imag(self) == mrb_imag(other) && mrb_real(self) == mrb_real(other));
 }
 
+static mrb_value
+cpx_plus(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_float oreal, oimag;
 
+  mrb_get_args(mrb, "o", &other);
+  MRB_TO_COMPLEX(other, oreal, oimag);
+  return mrb_complex_value(mrb, mrb_real(self) + oreal, mrb_imag(self) + oimag);
+}
+
+static mrb_value
+cpx_minus(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_float oreal, oimag;
+
+  mrb_get_args(mrb, "o", &other);
+  MRB_TO_COMPLEX(other, oreal, oimag);
+  return mrb_complex_value(mrb, mrb_real(self) - oreal, mrb_imag(self) - oimag);
+}
 
 /* ------------------------------------------------------------------------*/
 void
@@ -98,6 +136,8 @@ mrb_mruby_complex_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, complex, "eql?", cpx_eql, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, complex, "real", cpx_real, MRB_ARGS_NONE());
   mrb_define_method(mrb, complex, "imag", cpx_imag, MRB_ARGS_NONE());
+  mrb_define_method(mrb, complex, "+", cpx_plus, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, complex, "-", cpx_minus, MRB_ARGS_REQ(1));
 }
 
 void
