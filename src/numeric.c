@@ -299,6 +299,14 @@ flo_mul(mrb_state *mrb, mrb_value x)
   mrb_value y;
 
   mrb_get_args(mrb, "o", &y);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(y)) {
+    return mrb_complex_value( mrb,
+      mrb_real(y) * mrb_float(x),
+      mrb_imag(y) * mrb_float(x)
+    );
+  }
+#endif
   return mrb_float_value(mrb, mrb_float(x) * mrb_to_flo(mrb, y));
 }
 
@@ -743,6 +751,14 @@ fix_mul(mrb_state *mrb, mrb_value x)
   mrb_value y;
 
   mrb_get_args(mrb, "o", &y);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(y)) {
+    return mrb_complex_value( mrb,
+      mrb_real(y) * (mrb_float)mrb_fixnum(x),
+      mrb_imag(y) * (mrb_float)mrb_fixnum(x)
+    );
+  }
+#endif
   return mrb_fixnum_mul(mrb, x, y);
 }
 

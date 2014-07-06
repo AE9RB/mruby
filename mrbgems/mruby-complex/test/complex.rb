@@ -38,3 +38,11 @@ assert("Complex() subtraction") do
   assert_equal Complex(-2.6,4), 0.5 - Complex(3.1,4)
   assert_equal Complex(1.9,4), 5 - Complex(3.1,4)
 end
+
+assert("Complex() multiplication") do
+  assert_equal Complex(2,39), Complex(5,6) * Complex(4,3)
+  assert_equal Complex(1.55,2), Complex(3.1,4) * 0.5
+  assert_equal Complex(15.5,20), Complex(3.1,4) * 5
+  assert_equal Complex(1.55,2), 0.5 * Complex(3.1,4)
+  assert_equal Complex(15.5,20), 5 * Complex(3.1,4)
+end
