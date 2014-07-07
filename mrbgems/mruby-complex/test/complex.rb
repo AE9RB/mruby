@@ -46,3 +46,16 @@ assert("Complex() multiplication") do
   assert_equal Complex(1.55,2), 0.5 * Complex(3.1,4)
   assert_equal Complex(15.5,20), 5 * Complex(3.1,4)
 end
+
+assert("Complex() division") do
+  nans = Complex(-3,37) / Complex(0,0)
+  assert_true nans.real.nan?
+  assert_true nans.imag.nan?
+  assert_equal Complex(3,2), Complex(-3,37) / Complex(5,9)
+  assert_equal Complex(5,9), Complex(-3,37) / Complex(3,2)
+  assert_equal Complex(-2,-3), Complex(6,9) / -3
+  assert_equal Complex(0.4,-0.8), 2 / Complex(1,2)
+  assert_equal Complex(0.8,-0.4), 2 / Complex(2,1)
+  assert_equal Complex(0.2,-0.1), 0.5 / Complex(2,1)
+  assert_equal Complex(0.1,-0.2), 0.5 / Complex(1,2)
+end

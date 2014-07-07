@@ -93,10 +93,27 @@ mrb_num_div(mrb_state *mrb, mrb_value x, mrb_value y)
 static mrb_value
 num_div(mrb_state *mrb, mrb_value x)
 {
-  mrb_float y;
+  mrb_value y;
+  mrb_float f;
 
-  mrb_get_args(mrb, "f", &y);
-  return mrb_float_value(mrb, mrb_to_flo(mrb, x) / y);
+  f = mrb_to_flo(mrb, x);
+  mrb_get_args(mrb, "o", &y);
+#ifdef MRB_COMPLEX
+  if (mrb_complex_p(y)) {
+    if (mrb_float_abs(mrb_real(y)) > mrb_float_abs(mrb_imag(y))) {
+      mrb_float r, n;
+      r = mrb_imag(y) / mrb_real(y);
+      n = mrb_real(y) * (r*r+1);
+      return mrb_complex_value(mrb, f/n, -f*r/n);
+    } else {
+      mrb_float r, n;
+      r = mrb_real(y) / mrb_imag(y);
+      n = mrb_imag(y) * (r*r+1);
+      return mrb_complex_value(mrb, f*r/n, -f/n);
+    }
+  }
+#endif
+  return mrb_float_value(mrb, f / mrb_to_flo(mrb, y));
 }
 
 /********************************************************************

@@ -162,6 +162,47 @@ cpx_mul(mrb_state *mrb, mrb_value self)
   );
 }
 
+static mrb_value
+cpx_div(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_float oreal;
+
+  mrb_get_args(mrb, "o", &other);
+  switch (mrb_type(other)) {
+  case MRB_TT_COMPLEX:
+    if (mrb_float_abs(mrb_real(other)) > mrb_float_abs(mrb_imag(other))) {
+      mrb_float r, n;
+      r = mrb_imag(other) / mrb_real(other);
+      n = mrb_real(other) * (r*r+1);
+      return mrb_complex_value(mrb,
+        (mrb_real(self) + (mrb_imag(self) * r)) / n,
+        (mrb_imag(self) - (mrb_real(self) * r)) / n
+      );
+    } else {
+      mrb_float r, n;
+      r = mrb_real(other) / mrb_imag(other);
+      n = mrb_imag(other) * (r*r+1);
+      return mrb_complex_value(mrb,
+        ((mrb_real(self) * r) + mrb_imag(self)) / n,
+        ((mrb_imag(self) * r) - mrb_real(self)) / n
+      );
+    }
+  case MRB_TT_FIXNUM:
+    oreal = (mrb_float)mrb_fixnum(other);
+    break;
+  case MRB_TT_FLOAT:
+    oreal = mrb_float(other);
+    break;
+  default:
+    cpx_raise_not_numeric_error(mrb);
+  }
+  return mrb_complex_value(mrb,
+    mrb_real(self) / oreal,
+    mrb_imag(self) / oreal
+  );
+}
+
 /* ------------------------------------------------------------------------*/
 void
 mrb_mruby_complex_gem_init(mrb_state *mrb)
@@ -192,6 +233,7 @@ mrb_mruby_complex_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, complex, "+", cpx_plus, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, complex, "-", cpx_minus, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, complex, "*", cpx_mul, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, complex, "/", cpx_div, MRB_ARGS_REQ(1));
 }
 
 void
