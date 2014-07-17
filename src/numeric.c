@@ -508,7 +508,7 @@ flo_infinite_p(mrb_state *mrb, mrb_value num)
   mrb_float value = mrb_float(num);
 
   if (isinf(value)) {
-    return mrb_fixnum_value( value < 0 ? -1 : 1 );
+    return mrb_fixnum_value(value < 0 ? -1 : 1);
   }
   return mrb_nil_value();
 }
@@ -721,12 +721,8 @@ int_to_i(mrb_state *mrb, mrb_value num)
   return num;
 }
 
-#ifdef MRB_FIXNUM_SHIFT
-#define SQRT_INT_MAX ((mrb_int)1<<((MRB_INT_BIT-1-MRB_FIXNUM_SHIFT)/2))
-#else
-#define SQRT_INT_MAX ((mrb_int)1<<((MRB_INT_BIT-1)/2))
-#endif
 /*tests if N*N would overflow*/
+#define SQRT_INT_MAX ((mrb_int)1<<((MRB_INT_BIT-1-MRB_FIXNUM_SHIFT)/2))
 #define FIT_SQRT_INT(n) (((n)<SQRT_INT_MAX)&&((n)>=-SQRT_INT_MAX))
 
 mrb_value
