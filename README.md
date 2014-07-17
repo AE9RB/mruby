@@ -2,13 +2,20 @@
 
 ## What's this fork
 
+This is a fork of mruby, not an mrbgem for use with the main project.
+
 mruby-complex adds support for complex numbers as an immediate mrb_value. The main development branch
 of mruby is limited to only having core features specified in the ISO specification. This means the
-implementation of a complex type can only exist as an mrbgem. As an mrbgem, every complex number
-would have to exist as an object which imposes severe performance penalties for most use cases.
+implementation of a complex type should only exist as an mrbgem. However, it is not practical to do
+with the current architecture.
 
-This is a complete fork of mruby, not an mrbgem for use with the main project. Implementation
-of the complex type exists as an mrbgem but is unusable without changes to the mruby core.
+Ruby typically has terrible performance with complex numbers. The benchmark/fft.rb program
+runs 250 times slower in Ruby 2.1 than a C implementation. Also, massive amounts of transient
+objects are created on the heap which must be garbage collected. This fork substantially
+iproves performance as well as completely eliminating the transient objects.
+
+ * mruby-complex fft.rb => 35ms
+ * Ruby 2.1.2 fft.rb => 129ms
 
 ## What's mruby
 
