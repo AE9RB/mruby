@@ -94,7 +94,7 @@ fiber_init(mrb_state *mrb, mrb_value self)
   c->stend = c->stbase + slen;
   c->stack = c->stbase;
 
-#if defined(MRB_NAN_BOXING) || defined(MRB_COMPLEX)
+#ifdef MRB_VALUE_NIL_NONZERO
   {
     mrb_value *p = c->stbase;
     mrb_value *pend = c->stend;

@@ -175,6 +175,19 @@ mrb_obj_id(mrb_value obj)
 }
 
 #ifdef MRB_WORD_BOXING
+#ifdef MRB_COMPLEX
+mrb_value
+mrb_word_boxing_complex_value(mrb_state *mrb, mrb_float real, mrb_float imag)
+{
+  mrb_value v;
+
+  v.value.p = mrb_obj_alloc(mrb, MRB_TT_COMPLEX, mrb->complex_class);
+  v.value.cp->real = real;
+  v.value.cp->imag = imag;
+  return v;
+}
+#endif
+
 mrb_value
 mrb_word_boxing_float_value(mrb_state *mrb, mrb_float f)
 {

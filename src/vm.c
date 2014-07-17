@@ -60,7 +60,7 @@ The value below allows about 60000 recursive calls in the simplest case. */
 static inline void
 stack_clear(mrb_value *from, size_t count)
 {
-#if !defined(MRB_NAN_BOXING) && !defined(MRB_COMPLEX)
+#ifndef MRB_VALUE_NIL_NONZERO
   const mrb_value mrb_value_zero = { { 0 } };
 
   while (count-- > 0) {
@@ -1679,7 +1679,7 @@ RETRY_TRY_BLOCK:
       switch (TYPES2(mrb_type(regs[a]),mrb_type(regs[a+1]))) {
 #ifdef MRB_COMPLEX
       case TYPES2(MRB_TT_COMPLEX,MRB_TT_COMPLEX):
-        MRB_SET_COMPLEX(regs[a],
+        SET_COMPLEX_VALUE(mrb,regs[a],
           mrb_real(regs[a]) + mrb_real(regs[a+1]),
           mrb_imag(regs[a]) + mrb_imag(regs[a+1])
         );
@@ -1688,7 +1688,7 @@ RETRY_TRY_BLOCK:
         mrb_real(regs[a]) += (mrb_float)mrb_fixnum(regs[a+1]);
         break;
       case TYPES2(MRB_TT_FIXNUM,MRB_TT_COMPLEX):
-        MRB_SET_COMPLEX(regs[a],
+        SET_COMPLEX_VALUE(mrb,regs[a],
           mrb_real(regs[a+1]) + (mrb_float)mrb_fixnum(regs[a]),
           mrb_imag(regs[a+1])
         );
@@ -1697,7 +1697,7 @@ RETRY_TRY_BLOCK:
         mrb_real(regs[a]) += mrb_float(regs[a+1]);
         break;
       case TYPES2(MRB_TT_FLOAT,MRB_TT_COMPLEX):
-        MRB_SET_COMPLEX(regs[a],
+        SET_COMPLEX_VALUE(mrb,regs[a],
           mrb_real(regs[a+1]) + mrb_float(regs[a]),
           mrb_imag(regs[a+1])
         );
@@ -1764,7 +1764,7 @@ RETRY_TRY_BLOCK:
       switch (TYPES2(mrb_type(regs[a]),mrb_type(regs[a+1]))) {
 #ifdef MRB_COMPLEX
       case TYPES2(MRB_TT_COMPLEX,MRB_TT_COMPLEX):
-        MRB_SET_COMPLEX(regs[a],
+        SET_COMPLEX_VALUE(mrb,regs[a],
           mrb_real(regs[a]) - mrb_real(regs[a+1]),
           mrb_imag(regs[a]) - mrb_imag(regs[a+1])
         );
@@ -1773,7 +1773,7 @@ RETRY_TRY_BLOCK:
         mrb_real(regs[a]) -= (mrb_float)mrb_fixnum(regs[a+1]);
         break;
       case TYPES2(MRB_TT_FIXNUM,MRB_TT_COMPLEX):
-        MRB_SET_COMPLEX(regs[a],
+        SET_COMPLEX_VALUE(mrb,regs[a],
           (mrb_float)mrb_fixnum(regs[a]) - mrb_real(regs[a+1]),
           mrb_imag(regs[a+1])
         );
@@ -1782,7 +1782,7 @@ RETRY_TRY_BLOCK:
         mrb_real(regs[a]) -= mrb_float(regs[a+1]);
         break;
       case TYPES2(MRB_TT_FLOAT,MRB_TT_COMPLEX):
-        MRB_SET_COMPLEX(regs[a],
+        SET_COMPLEX_VALUE(mrb,regs[a],
           mrb_float(regs[a]) - mrb_real(regs[a+1]),
           mrb_imag(regs[a+1])
         );
@@ -1847,7 +1847,7 @@ RETRY_TRY_BLOCK:
         {
           mrb_float regs_ar = mrb_real(regs[a]);
           mrb_float regs_ai = mrb_imag(regs[a]);
-          MRB_SET_COMPLEX(regs[a],
+          SET_COMPLEX_VALUE(mrb,regs[a],
             regs_ar * mrb_real(regs[a+1]) - regs_ai * mrb_imag(regs[a+1]),
             regs_ai * mrb_real(regs[a+1]) + regs_ar * mrb_imag(regs[a+1])
           );
@@ -1857,7 +1857,7 @@ RETRY_TRY_BLOCK:
         {
           mrb_float regs_ar = mrb_real(regs[a]);
           mrb_float regs_ai = mrb_imag(regs[a]);
-          MRB_SET_COMPLEX(regs[a],
+          SET_COMPLEX_VALUE(mrb,regs[a],
             regs_ar * mrb_fixnum(regs[a+1]),
             regs_ai * mrb_fixnum(regs[a+1])
           );
@@ -1866,7 +1866,7 @@ RETRY_TRY_BLOCK:
       case TYPES2(MRB_TT_FIXNUM,MRB_TT_COMPLEX):
         {
           mrb_float x = mrb_fixnum(regs[a]);
-          MRB_SET_COMPLEX(regs[a],
+          SET_COMPLEX_VALUE(mrb,regs[a],
             x * mrb_real(regs[a+1]),
             x * mrb_imag(regs[a+1])
           );
@@ -1876,7 +1876,7 @@ RETRY_TRY_BLOCK:
         {
           mrb_float regs_ar = mrb_real(regs[a]);
           mrb_float regs_ai = mrb_imag(regs[a]);
-          MRB_SET_COMPLEX(regs[a],
+          SET_COMPLEX_VALUE(mrb,regs[a],
             regs_ar * mrb_float(regs[a+1]),
             regs_ai * mrb_float(regs[a+1])
           );
@@ -1885,7 +1885,7 @@ RETRY_TRY_BLOCK:
       case TYPES2(MRB_TT_FLOAT,MRB_TT_COMPLEX):
         {
           mrb_float x = mrb_float(regs[a]);
-          MRB_SET_COMPLEX(regs[a],
+          SET_COMPLEX_VALUE(mrb,regs[a],
             x * mrb_real(regs[a+1]),
             x * mrb_imag(regs[a+1])
           );

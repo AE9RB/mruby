@@ -128,11 +128,11 @@ typedef struct mrb_state {
   struct RClass *array_class;
   struct RClass *hash_class;
 
+  struct RClass *float_class;
+  struct RClass *fixnum_class;
 #ifdef MRB_COMPLEX
   struct RClass *complex_class;
 #endif
-  struct RClass *float_class;
-  struct RClass *fixnum_class;
   struct RClass *true_class;
   struct RClass *false_class;
   struct RClass *nil_class;

@@ -100,7 +100,7 @@ num_div(mrb_state *mrb, mrb_value x)
   mrb_get_args(mrb, "o", &y);
 #ifdef MRB_COMPLEX
   if (mrb_complex_p(y)) {
-    if (mrb_float_abs(mrb_real(y)) > mrb_float_abs(mrb_imag(y))) {
+    if (fabs(mrb_real(y)) > fabs(mrb_imag(y))) {
       mrb_float r, n;
       r = mrb_imag(y) / mrb_real(y);
       n = mrb_real(y) * (r*r+1);
