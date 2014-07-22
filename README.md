@@ -12,7 +12,7 @@ with the current architecture.
 Ruby typically has terrible performance with complex numbers. The benchmark/fft.rb program
 runs 250 times slower in Ruby 2.1 than a C implementation. Also, massive amounts of transient
 objects are created on the heap which must be garbage collected. This fork substantially
-iproves performance as well as completely eliminating the transient objects.
+improves performance as well as completely eliminating the transient objects.
 
  * mruby-complex fft.rb => 35ms
  * Ruby 2.1.2 fft.rb => 129ms
