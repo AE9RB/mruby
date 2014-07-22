@@ -128,13 +128,14 @@ enum mrb_vtype {
 #ifndef mrb_complex_p
 #define mrb_complex_p(o) (mrb_type(o) == MRB_TT_COMPLEX)
 #endif
-#define mrb_float_p(o)  (mrb_type(o) == MRB_TT_FLOAT)
+#define mrb_float_p(o) (mrb_type(o) == MRB_TT_FLOAT)
 #define mrb_symbol_p(o) (mrb_type(o) == MRB_TT_SYMBOL)
-#define mrb_array_p(o)  (mrb_type(o) == MRB_TT_ARRAY)
+#define mrb_array_p(o) (mrb_type(o) == MRB_TT_ARRAY)
 #define mrb_string_p(o) (mrb_type(o) == MRB_TT_STRING)
-#define mrb_hash_p(o)   (mrb_type(o) == MRB_TT_HASH)
-#define mrb_cptr_p(o)   (mrb_type(o) == MRB_TT_CPTR)
-#define mrb_test(o)     mrb_bool(o)
+#define mrb_hash_p(o) (mrb_type(o) == MRB_TT_HASH)
+#define mrb_cptr_p(o) (mrb_type(o) == MRB_TT_CPTR)
+#define mrb_exception_p(o) (mrb_type(o) == MRB_TT_EXCEPTION)
+#define mrb_test(o)   mrb_bool(o)
 mrb_bool mrb_regexp_p(struct mrb_state*, mrb_value);
 
 #ifdef MRB_COMPLEX
