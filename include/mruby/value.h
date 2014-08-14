@@ -24,14 +24,14 @@ struct mrb_state;
   typedef int16_t mrb_int;
 # define MRB_INT_BIT 16
 # define MRB_INT_MIN (INT16_MIN>>MRB_FIXNUM_SHIFT)
-# define MRB_INT_MAX )INT16_MAX>>MRB_FIXNUM_SHIFT)
+# define MRB_INT_MAX (INT16_MAX>>MRB_FIXNUM_SHIFT)
 #else
   typedef int32_t mrb_int;
 # define MRB_INT_BIT 32
 # define MRB_INT_MIN (INT32_MIN>>MRB_FIXNUM_SHIFT)
 # define MRB_INT_MAX (INT32_MAX>>MRB_FIXNUM_SHIFT)
 #endif
-  
+
 #ifdef MRB_USE_FLOAT
   typedef float mrb_float;
 # define mrb_float_to_str(buf, i) sprintf(buf, "%.7e", i)
@@ -47,7 +47,11 @@ struct mrb_state;
 #  define inline __inline
 # endif
 # if _MSC_VER < 1900
-#  define snprintf _snprintf
+#  include <stdarg.h>
+MRB_API int mrb_msvc_vsnprintf(char *s, size_t n, const char *format, va_list arg);
+MRB_API int mrb_msvc_snprintf(char *s, size_t n, const char *format, ...);
+#  define vsnprintf(s, n, format, arg) mrb_msvc_vsnprintf(s, n, format, arg)
+#  define snprintf(s, n, format, ...) mrb_msvc_snprintf(s, n, format, __VA_ARGS__)
 # endif
 # if _MSC_VER < 1800
 #  include <float.h>
@@ -136,7 +140,7 @@ enum mrb_vtype {
 #define mrb_cptr_p(o) (mrb_type(o) == MRB_TT_CPTR)
 #define mrb_exception_p(o) (mrb_type(o) == MRB_TT_EXCEPTION)
 #define mrb_test(o)   mrb_bool(o)
-mrb_bool mrb_regexp_p(struct mrb_state*, mrb_value);
+MRB_API mrb_bool mrb_regexp_p(struct mrb_state*, mrb_value);
 
 #ifdef MRB_COMPLEX
 static inline mrb_value
@@ -152,6 +156,7 @@ static inline mrb_value
 mrb_float_value(struct mrb_state *mrb, mrb_float f)
 {
   mrb_value v;
+  (void) mrb;
   SET_FLOAT_VALUE(mrb, v, f);
   return v;
 }
@@ -160,6 +165,7 @@ static inline mrb_value
 mrb_cptr_value(struct mrb_state *mrb, void *p)
 {
   mrb_value v;
+  (void) mrb;
   SET_CPTR_VALUE(mrb,v,p);
   return v;
 }

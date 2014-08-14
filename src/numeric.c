@@ -27,7 +27,7 @@
 #define FLO_EPSILON DBL_EPSILON
 #endif
 
-mrb_float
+MRB_API mrb_float
 mrb_to_flo(mrb_state *mrb, mrb_value val)
 {
   switch (mrb_type(val)) {
@@ -54,13 +54,11 @@ static mrb_value
 num_pow(mrb_state *mrb, mrb_value x)
 {
   mrb_value y;
-  mrb_bool both_int = FALSE;
   mrb_float d;
 
   mrb_get_args(mrb, "o", &y);
-  if (mrb_fixnum_p(x) && mrb_fixnum_p(y)) both_int = TRUE;
   d = pow(mrb_to_flo(mrb, x), mrb_to_flo(mrb, y));
-  if (both_int && FIXABLE(d))
+  if (mrb_fixnum_p(x) && mrb_fixnum_p(y) && FIXABLE(d))
     return mrb_fixnum_value((mrb_int)d);
   return mrb_float_value(mrb, d);
 }
@@ -76,7 +74,7 @@ num_pow(mrb_state *mrb, mrb_value x)
  * result.
  */
 
-mrb_value
+MRB_API mrb_value
 mrb_num_div(mrb_state *mrb, mrb_value x, mrb_value y)
 {
   return mrb_float_value(mrb, mrb_to_flo(mrb, x) / mrb_to_flo(mrb, y));
@@ -427,8 +425,6 @@ static mrb_value
 flo_eq(mrb_state *mrb, mrb_value x)
 {
   mrb_value y;
-  volatile mrb_float a, b;
-
   mrb_get_args(mrb, "o", &y);
 
   switch (mrb_type(y)) {
@@ -437,16 +433,12 @@ flo_eq(mrb_state *mrb, mrb_value x)
     return mrb_bool_value(mrb_imag(y) == 0 && mrb_real(y) == mrb_float(x));
 #endif
   case MRB_TT_FIXNUM:
-    b = (mrb_float)mrb_fixnum(y);
-    break;
+    return mrb_bool_value(mrb_float(x) == (mrb_float)mrb_fixnum(y));    
   case MRB_TT_FLOAT:
-    b = mrb_float(y);
-    break;
+    return mrb_bool_value(mrb_float(x) == mrb_float(y));
   default:
     return mrb_false_value();
   }
-  a = mrb_float(x);
-  return mrb_bool_value(a == b);
 }
 
 /* 15.2.8.3.18 */
@@ -527,9 +519,7 @@ flo_infinite_p(mrb_state *mrb, mrb_value num)
 static mrb_value
 flo_finite_p(mrb_state *mrb, mrb_value num)
 {
-  mrb_float value = mrb_float(num);
-
-  return mrb_bool_value(isfinite(value));
+  return mrb_bool_value(isfinite(mrb_float(num)));
 }
 
 /* 15.2.9.3.10 */
@@ -1122,7 +1112,7 @@ fix_to_f(mrb_state *mrb, mrb_value num)
  *     FloatDomainError: Infinity
  */
 /* ------------------------------------------------------------------------*/
-mrb_value
+MRB_API mrb_value
 mrb_flo_to_fixnum(mrb_state *mrb, mrb_value x)
 {
   mrb_int z;
@@ -1230,7 +1220,7 @@ fix_minus(mrb_state *mrb, mrb_value self)
 }
 
 
-mrb_value
+MRB_API mrb_value
 mrb_fixnum_to_str(mrb_state *mrb, mrb_value x, int base)
 {
   char buf[MRB_INT_BIT+1];
